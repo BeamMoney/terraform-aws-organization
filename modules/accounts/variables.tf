@@ -2,11 +2,11 @@ variable "accounts" {
   description = "List of AWS accounts to create"
   type = map(object({
     email                            = string
-    close_on_deletion                = optional(bool)
-    iam_user_access_to_billing       = optional(bool)
-    delegated_administrator_services = list(string)
-    tags                             = optional(map(string))
-    parent_id                        = optional(string)
+    close_on_deletion                = optional(bool, true)
+    iam_user_access_to_billing       = optional(bool, false)
+    delegated_administrator_services = optional(list(string), [])
+    tags                             = optional(map(string), {})
+    parent_id                        = string
   }))
 }
 
