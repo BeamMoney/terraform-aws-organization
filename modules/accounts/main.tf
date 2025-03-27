@@ -6,7 +6,7 @@ resource "aws_organizations_account" "default" {
   close_on_deletion          = each.value.close_on_deletion
   iam_user_access_to_billing = each.value.iam_user_access_to_billing ? "ALLOW" : "DENY"
   tags                       = merge(each.value.tags, var.tags)
-  parent_id                  = each.value.parent_id == "" ? each.value.parent_id : null
+  parent_id                  = each.value.parent_id
 }
 
 locals {

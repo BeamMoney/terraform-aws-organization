@@ -6,7 +6,7 @@ variable "accounts" {
     iam_user_access_to_billing       = optional(bool, false)
     delegated_administrator_services = optional(list(string), [])
     tags                             = optional(map(string), {})
-    parent_id                        = string
+    parent_id                        = optional(string, null)
   }))
 }
 
