@@ -1,0 +1,32 @@
+name: Sync tags from upstream
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync-tags:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Fetch upstream tags
+        run: |
+          git remote add upstream https://github.com/blackbird-cloud/terraform-aws-organization.git
+          git fetch --tags --force upstream
+
+      - name: Push tags missing from the fork
+        run: |
+          git ls-remote --tags origin \
+            | awk '{print $2}' | sed 's|refs/tags/||' | grep -v '\^{}$' | sort -u > /tmp/have.txt
+          git tag | sort -u > /tmp/all.txt
+          comm -23 /tmp/all.txt /tmp/have.txt > /tmp/missing.txt
+          echo "Missing tags:"; cat /tmp/missing.txt
+          xargs -a /tmp/missing.txt -r git push origin
